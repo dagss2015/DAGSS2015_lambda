@@ -5,6 +5,10 @@ package es.uvigo.esei.dagss.dominio.daos;
 
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
+import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import java.util.Calendar;
+import java.util.Date;
+
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -37,6 +41,18 @@ public class MedicoDAO extends GenericoDAO<Medico> {
         q.setParameter("patron","%"+patron+"%");        
         return q.getResultList();
     }
+    
 
     // Completar aqui
+
+    public List<Cita> buscarCitasMedicoPorDia(Medico m) {
+        
+        Query q = em.createQuery("SELECT c FROM Cita AS c "
+                + "  WHERE (c.fecha = :fecha ) AND "
+                + "        (c.medico_id = :id)");
+        q.setParameter("id",m.getId());
+        Date d = Calendar.getInstance().getTime();
+        q.setParameter("fecha",d);
+        return q.getResultList();
+    }
 }

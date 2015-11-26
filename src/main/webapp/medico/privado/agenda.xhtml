@@ -11,7 +11,7 @@
         <ui:composition template="/plantillas/plantillaGlobal.xhtml">
 
             <ui:define name="tituloPagina">
-                Bienvenido Dr <h:outputText value="#{medicoControlador.medicoActual.nombre}"/>
+                Bienvenido Dr <h:outputText value="#{medicoControlador.dni}"/>
             </ui:define>            
 
             <ui:define name="izquierda">
@@ -19,6 +19,9 @@
             </ui:define>
 
             <ui:define name="contenido">
+                <h:dataTable value="#{controladorMedico.getCitas}" var="citas">
+                    <h:column>HOLAAAAAAAAAAAAAAA</h:column>
+                </h:dataTable>
             </ui:define>
         </ui:composition>
 
