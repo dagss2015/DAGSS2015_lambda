@@ -31,6 +31,9 @@ public class MedicoControlador implements Serializable {
     private String dni;
     private String numeroColegiado;
     private String password;
+    private Cita citaActual;
+    private String textoBuscar;
+
 
     @Inject
     private AutenticacionControlador autenticacionControlador;
@@ -45,6 +48,14 @@ public class MedicoControlador implements Serializable {
      * Creates a new instance of AdministradorControlador
      */
     public MedicoControlador() {
+    }
+    
+    public Cita getCitaActual() {
+        return citaActual;
+    }
+
+    public void setCitaActual(Cita citaActual) {
+        this.citaActual = citaActual;
     }
 
     public String getDni() {
@@ -83,6 +94,15 @@ public class MedicoControlador implements Serializable {
         return (((dni == null) && (numeroColegiado == null)) || (password == null));
     }
 
+    public String getTextoBuscar() {
+        return textoBuscar;
+    }
+
+    public void setTextoBuscar(String textoBuscar) {
+        this.textoBuscar = textoBuscar;
+    }
+    
+
     private Medico recuperarDatosMedico() {
         Medico medico = null;
         if (dni != null) {
@@ -116,11 +136,13 @@ public class MedicoControlador implements Serializable {
     }
 
     //Acciones
-    public String doShowCita() {
+    public String doShowCita(Cita cita) {
+        citaActual = cita;
         return "detallesCita";
     }
     
     public List<Cita> getCitas(){
         return medicoDAO.buscarCitasMedicoPorDia(medicoActual);
     }
+    
 }

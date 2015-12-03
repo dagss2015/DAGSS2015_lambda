@@ -49,7 +49,7 @@ public class MedicoDAO extends GenericoDAO<Medico> {
         
         Query q = em.createQuery("SELECT c FROM Cita AS c "
                 + "  WHERE (c.fecha = :fecha ) AND "
-                + "        (c.medico_id = :id)");
+                + "        (c.medico.id = :id)");
         q.setParameter("id",m.getId());
         Date d = Calendar.getInstance().getTime();
         q.setParameter("fecha",d);
