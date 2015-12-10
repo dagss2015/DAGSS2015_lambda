@@ -5,8 +5,10 @@ package es.uvigo.esei.dagss.controladores.medico;
 
 import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
+import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import javax.inject.Named;
@@ -33,6 +35,7 @@ public class MedicoControlador implements Serializable {
     private String password;
     private Cita citaActual;
     private String textoBuscar;
+    private List<Medicamento> medicamentosDisponibles;
 
 
     @Inject
@@ -43,6 +46,9 @@ public class MedicoControlador implements Serializable {
 
     @EJB
     private MedicoDAO medicoDAO;
+    
+    @EJB
+    private MedicamentoDAO medicamentoDAO;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -135,6 +141,14 @@ public class MedicoControlador implements Serializable {
         return destino;
     }
 
+    public List<Medicamento> getMedicamentosDisponibles() {
+        return medicamentosDisponibles;
+    }
+
+    public void setMedicamentosDisponibles(List<Medicamento> medicamentosDisponibles) {
+        this.medicamentosDisponibles = medicamentosDisponibles;
+    }
+
     //Acciones
     public String doShowCita(Cita cita) {
         citaActual = cita;
@@ -145,4 +159,15 @@ public class MedicoControlador implements Serializable {
         return medicoDAO.buscarCitasMedicoPorDia(medicoActual);
     }
     
+    public void buscarMedicamentoPorNombre(){
+        this.medicamentosDisponibles = medicamentoDAO.buscarPorNombre(textoBuscar);
+    }
+    
+    public void buscarMedicamentoPorFabricante(){
+        this.medicamentosDisponibles = medicamentoDAO.buscarPorFabricante(textoBuscar);
+    }
+    
+    public void buscarMedicamentoPorPpioActivo(){
+        this.medicamentosDisponibles = medicamentoDAO.buscarPorPpioActivo(textoBuscar);
+    }
 }

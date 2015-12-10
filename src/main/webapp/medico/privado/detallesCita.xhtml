@@ -17,12 +17,22 @@
             <ui:define name="izquierda">
                 <h:link value="Agenda" outcome="agenda"/>
             </ui:define>
-
             <ui:define name="contenido">
-                <h:outputText value="Paciente: #{medicoControlador.citaActual.paciente.dni}"/>
-                <h:outputLabel value="Buscar medicamento" />
-                <h:inputText value="#{medicoControlador.textoBuscar}"/>
-                <h:commandButton value="Buscar" action="#{anuncioControlador.doBuscarMedicamento}"/> 
+                <h:form>
+                    <h:outputText value="Paciente: #{medicoControlador.citaActual.paciente.dni}"/>
+                    <h:outputLabel value="Buscar medicamento por nombre" />
+                    <h:inputText value="#{medicoControlador.textoBuscar}"/>
+                    <h:commandButton value="Buscar" action="#{medicoControlador.buscarMedicamentoPorNombre()}"/> 
+                </h:form>
+                <h:dataTable value="#{medicoControlador.medicamentosDisponibles}" var="medicamento">
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Medicamento"/>
+                        </f:facet>
+                        <h:outputText value="#{medicamento.nombre}"/>
+                    </h:column>
+                    
+                </h:dataTable>
             </ui:define>
         </ui:composition>
 
