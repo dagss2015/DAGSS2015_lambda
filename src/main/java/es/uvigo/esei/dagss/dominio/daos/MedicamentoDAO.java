@@ -15,8 +15,8 @@ public class MedicamentoDAO extends GenericoDAO<Medicamento> {
 
     public List<Medicamento> buscarPorNombre(String nombre) {
         Query q = em.createQuery("SELECT m FROM Medicamento AS m "
-                + "  WHERE m.nombre like :nombre");
-        q.setParameter("nombre", nombre);
+                + "  WHERE m.nombre LIKE :nombre");
+        q.setParameter("nombre", "%"+nombre+"%");
 
         return q.getResultList();
     }
@@ -24,15 +24,15 @@ public class MedicamentoDAO extends GenericoDAO<Medicamento> {
     public List<Medicamento> buscarPorFabricante(String fabricante) {
         Query q = em.createQuery("SELECT m FROM Medicamento AS m "
                 + "  WHERE m.fabricante like :fabricante");
-        q.setParameter("fabricante", fabricante);
+        q.setParameter("fabricante", "%"+fabricante+"%");
 
         return q.getResultList();
     }
 
     public List<Medicamento> buscarPorPpioActivo(String ppioActivo) {
-        Query q = em.createQuery("SELECT m FROM Medicamento AS m "
-                + "  WHERE m.principioactivo like :principioactivo");
-        q.setParameter("principioactivo", ppioActivo);
+         Query q = em.createQuery("SELECT m FROM Medicamento AS m "
+                + "  WHERE m.principioActivo like :ppioactivo");
+        q.setParameter("ppioactivo", "%"+ppioActivo+"%");
 
         return q.getResultList();
     }

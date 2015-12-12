@@ -22,17 +22,80 @@
                     <h:outputText value="Paciente: #{medicoControlador.citaActual.paciente.dni}"/>
                     <h:outputLabel value="Buscar medicamento por nombre" />
                     <h:inputText value="#{medicoControlador.textoBuscar}"/>
-                    <h:commandButton value="Buscar" action="#{medicoControlador.buscarMedicamentoPorNombre()}"/> 
-                </h:form>
-                <h:dataTable value="#{medicoControlador.medicamentosDisponibles}" var="medicamento">
+                    <h:commandButton value="Buscar por Nombre" action="#{medicoControlador.buscarMedicamentoPorNombre()}"/> 
+                    <h:commandButton value="Buscar por Fabricante" action="#{medicoControlador.buscarMedicamentoPorFabricante()}"/> 
+                    <h:commandButton value="Buscar por Principio Activo" action="#{medicoControlador.buscarMedicamentoPorPpioActivo()}"/> 
+                    <h:dataTable value="#{medicoControlador.prescripcionesDisponibles}" var="prescripcion">
                     <h:column>
                         <f:facet name="header">
                             <h:outputText value="Medicamento"/>
                         </f:facet>
-                        <h:outputText value="#{medicamento.nombre}"/>
+                        <h:outputText value="#{prescripcion.medicamento.nombre}"/>
                     </h:column>
-                    
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Fabricante"/>
+                        </f:facet>
+                        <h:outputText value="#{prescripcion.medicamento.fabricante}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Principio Activo"/>
+                        </f:facet>
+                        <h:outputText value="#{prescripcion.medicamento.principioActivo}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Número de Dosis"/>
+                        </f:facet>
+                        <h:outputText value="#{prescripcion.medicamento.numeroDosis}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Indicaciones"/>
+                        </f:facet>
+                        <h:inputText value="#{prescripcion.indicaciones}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">
+                            <h:outputText value="Dosis a prescribir"/>
+                        </f:facet>
+                        <h:inputText value="#{prescripcion.dosis}"/>
+                    </h:column>
+                    <h:column>
+                        <h:commandButton value="Prescribir" action="#{medicoControlador.prescribir(prescripcion)}"/>
+                    </h:column>
                 </h:dataTable>
+                    <h:dataTable value="#{medicoControlador.tratamiento.prescipciones}" var="prescripcion">
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Medicamento"/>
+                    </f:facet>
+                    <h:outputText value="#{prescripcion.medicamento.nombre}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Indicaciones"/>
+                    </f:facet>
+                    <h:outputText value="#{prescripcion.indicaciones}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:outputText value="Dosis prescritas"/>
+                    </f:facet>
+                    <h:outputText value="#{prescripcion.dosis}"/>
+                </h:column>
+                <h:column>
+                    <h:commandButton value="Eliminar" action="#{medicoControlador.eliminar(prescripcion)}"/>
+                </h:column>
+            </h:dataTable>
+                    <h:inputTextarea value="#{medicoControlador.tratamiento.comentarios}" rows="10" />
+                    <h:selectOneMenu value="#{medicoControlador.citaActual.estado}">
+                        <f:selectItems value="#{medicoControlador.estadosCita}" var="m" itemValue="#{m}"/>
+                    </h:selectOneMenu>
+                    <h:commandButton value="Guardar" action="#{medicoControlador.finalizarCita()}"/>
+                </h:form>
+                
             </ui:define>
         </ui:composition>
 

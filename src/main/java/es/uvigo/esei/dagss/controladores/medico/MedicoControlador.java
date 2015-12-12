@@ -7,13 +7,18 @@ import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
+import es.uvigo.esei.dagss.dominio.daos.TratamientoDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
 import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
+import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
+import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -35,7 +40,11 @@ public class MedicoControlador implements Serializable {
     private String password;
     private Cita citaActual;
     private String textoBuscar;
-    private List<Medicamento> medicamentosDisponibles;
+    private int dosisAPrescribir;
+    private String indicaciones;
+    private Tratamiento tratamiento = new Tratamiento();
+    private List<Prescripcion> prescripcionesDisponibles = new LinkedList<>();
+    private EstadoCita estadoCita;
 
 
     @Inject
@@ -49,6 +58,9 @@ public class MedicoControlador implements Serializable {
     
     @EJB
     private MedicamentoDAO medicamentoDAO;
+    
+    @EJB
+    private TratamientoDAO tratamientoDAO;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -107,7 +119,22 @@ public class MedicoControlador implements Serializable {
     public void setTextoBuscar(String textoBuscar) {
         this.textoBuscar = textoBuscar;
     }
-    
+
+    public List<Prescripcion> getPrescripcionesDisponibles() {
+        return this.prescripcionesDisponibles;
+    }
+
+    public void setPrescripcionesDisponibles(List<Prescripcion> prescripcionesDisponibles) {
+        this.prescripcionesDisponibles = prescripcionesDisponibles;
+    }
+
+    public EstadoCita getEstadoCita() {
+        return estadoCita;
+    }
+
+    public void setEstadoCita(EstadoCita estadoCita) {
+        this.estadoCita = estadoCita;
+    }
 
     private Medico recuperarDatosMedico() {
         Medico medico = null;
@@ -141,14 +168,6 @@ public class MedicoControlador implements Serializable {
         return destino;
     }
 
-    public List<Medicamento> getMedicamentosDisponibles() {
-        return medicamentosDisponibles;
-    }
-
-    public void setMedicamentosDisponibles(List<Medicamento> medicamentosDisponibles) {
-        this.medicamentosDisponibles = medicamentosDisponibles;
-    }
-
     //Acciones
     public String doShowCita(Cita cita) {
         citaActual = cita;
@@ -160,14 +179,66 @@ public class MedicoControlador implements Serializable {
     }
     
     public void buscarMedicamentoPorNombre(){
-        this.medicamentosDisponibles = medicamentoDAO.buscarPorNombre(textoBuscar);
+        this.prescripcionesDisponibles = medToPres(medicamentoDAO.buscarPorNombre(textoBuscar));
     }
     
     public void buscarMedicamentoPorFabricante(){
-        this.medicamentosDisponibles = medicamentoDAO.buscarPorFabricante(textoBuscar);
+        this.prescripcionesDisponibles = medToPres(medicamentoDAO.buscarPorFabricante(textoBuscar));
     }
     
     public void buscarMedicamentoPorPpioActivo(){
-        this.medicamentosDisponibles = medicamentoDAO.buscarPorPpioActivo(textoBuscar);
+        this.prescripcionesDisponibles = medToPres(medicamentoDAO.buscarPorPpioActivo(textoBuscar));
+    }
+    
+    public void prescribir(Prescripcion prescripcion){
+       this.tratamiento.getPrescipciones().add(prescripcion);
+    }
+
+    public int getDosisAPrescribir() {
+        return dosisAPrescribir;
+    }
+
+    public void setDosisAPrescribir(int dosisAPrescribir) {
+        this.dosisAPrescribir = dosisAPrescribir;
+    }
+
+    public String getIndicaciones() {
+        return indicaciones;
+    }
+
+    public void setIndicaciones(String indicaciones) {
+        this.indicaciones = indicaciones;
+    }
+
+    public Tratamiento getTratamiento() {
+        return tratamiento;
+    }
+
+    public void setTratamiento(Tratamiento tratamiento) {
+        this.tratamiento = tratamiento;
+    }
+    
+    public void eliminar(Prescripcion prescripcion){
+        this.tratamiento.getPrescipciones().remove(prescripcion);
+    }
+    
+    private List<Prescripcion> medToPres(List<Medicamento> med){
+        List<Prescripcion> ret = new LinkedList<>();
+        for(Medicamento m: med){
+            ret.add(new Prescripcion(null, null, m, null));
+        }
+        return ret;
+    }
+    
+    public EstadoCita[] getEstadosCita(){
+        return EstadoCita.values();
+    }
+    
+    public String finalizarCita(){
+        if(this.citaActual.getEstado().equals(EstadoCita.COMPLETADA)){
+            this.tratamientoDAO.crear(this.tratamiento);
+        }
+        this.citaDAO.actualizar(citaActual);
+        return "agenda";
     }
 }

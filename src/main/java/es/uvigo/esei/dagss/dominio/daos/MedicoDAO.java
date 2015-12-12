@@ -6,6 +6,7 @@ package es.uvigo.esei.dagss.dominio.daos;
 import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Paciente;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
+import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -49,10 +50,11 @@ public class MedicoDAO extends GenericoDAO<Medico> {
         
         Query q = em.createQuery("SELECT c FROM Cita AS c "
                 + "  WHERE (c.fecha = :fecha ) AND "
-                + "        (c.medico.id = :id)");
+                + "        (c.medico.id = :id) AND (c.estado = :estado)");
         q.setParameter("id",m.getId());
         Date d = Calendar.getInstance().getTime();
         q.setParameter("fecha",d);
+        q.setParameter("estado", EstadoCita.PLANIFICADA);
         return q.getResultList();
     }
 }
