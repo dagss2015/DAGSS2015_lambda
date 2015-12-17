@@ -7,7 +7,6 @@ import es.uvigo.esei.dagss.controladores.autenticacion.AutenticacionControlador;
 import es.uvigo.esei.dagss.dominio.daos.CitaDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicamentoDAO;
 import es.uvigo.esei.dagss.dominio.daos.MedicoDAO;
-import es.uvigo.esei.dagss.dominio.daos.TratamientoDAO;
 import es.uvigo.esei.dagss.dominio.entidades.Cita;
 import es.uvigo.esei.dagss.dominio.entidades.EstadoCita;
 import es.uvigo.esei.dagss.dominio.entidades.Medicamento;
@@ -15,6 +14,7 @@ import es.uvigo.esei.dagss.dominio.entidades.Medico;
 import es.uvigo.esei.dagss.dominio.entidades.Prescripcion;
 import es.uvigo.esei.dagss.dominio.entidades.TipoUsuario;
 import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
+import es.uvigo.esei.dagss.serviceFacades.TratamientoService;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -58,9 +58,9 @@ public class MedicoControlador implements Serializable {
     
     @EJB
     private MedicamentoDAO medicamentoDAO;
-    
+        
     @EJB
-    private TratamientoDAO tratamientoDAO;
+    private TratamientoService tratamientoService;
 
     /**
      * Creates a new instance of AdministradorControlador
@@ -236,7 +236,7 @@ public class MedicoControlador implements Serializable {
     
     public String finalizarCita(){
         if(this.citaActual.getEstado().equals(EstadoCita.COMPLETADA)){
-            this.tratamientoDAO.crear(this.tratamiento);
+            this.tratamientoService.guardarTratamiento(this.tratamiento);
         }
         this.citaDAO.actualizar(citaActual);
         return "agenda";

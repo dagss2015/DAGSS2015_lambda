@@ -90,6 +90,10 @@
                 </h:column>
             </h:dataTable>
                     <h:inputTextarea value="#{medicoControlador.tratamiento.comentarios}" rows="10" />
+                    <h:outputLabel value="Fecha Inicio Tratamiento:" for="fecha"/>
+                        <p:calendar id="fechaInicio" value="#{medicoControlador.tratamiento.fechaInicio}"/>
+                    <h:outputLabel value="Fecha Fin Tratamiento:" for="fecha"/>
+                        <p:calendar id="fechaFin" value="#{medicoControlador.tratamiento.fechaFin}"/>
                     <h:selectOneMenu value="#{medicoControlador.citaActual.estado}">
                         <f:selectItems value="#{medicoControlador.estadosCita}" var="m" itemValue="#{m}"/>
                     </h:selectOneMenu>
