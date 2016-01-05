@@ -192,6 +192,7 @@ public class MedicoControlador implements Serializable {
     
     public void prescribir(Prescripcion prescripcion){
        this.tratamiento.getPrescipciones().add(prescripcion);
+       this.tratamiento.getPrescipciones().get(this.tratamiento.getPrescipciones().lastIndexOf(prescripcion)).setTratamiento(tratamiento);
     }
 
     public int getDosisAPrescribir() {
@@ -236,6 +237,8 @@ public class MedicoControlador implements Serializable {
     
     public String finalizarCita(){
         if(this.citaActual.getEstado().equals(EstadoCita.COMPLETADA)){
+            this.tratamiento.setMedico(medicoActual);
+            this.tratamiento.setPaciente(citaActual.getPaciente());
             this.tratamientoService.guardarTratamiento(this.tratamiento);
         }
         this.citaDAO.actualizar(citaActual);
