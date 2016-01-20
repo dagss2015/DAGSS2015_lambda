@@ -57,4 +57,11 @@ public class MedicoDAO extends GenericoDAO<Medico> {
         q.setParameter("estado", EstadoCita.PLANIFICADA);
         return q.getResultList();
     }
+    
+    public Medico buscarMedicoPorReceta(Long idReceta){
+        Query q = em.createQuery("SELECT m FROM Medico AS m,Prescripcion AS p,Receta AS r,Tratamiento AS t "
+                + "  WHERE m.id = t.medico.id AND p.id = r.prescripcion.id AND t.id = p.tratamiento.id AND r.id = :idreceta");
+        q.setParameter("idreceta", idReceta);
+        return filtrarResultadoUnico(q);
+    }
 }

@@ -4,6 +4,8 @@
 package es.uvigo.esei.dagss.dominio.daos;
 
 import es.uvigo.esei.dagss.dominio.entidades.Farmacia;
+import es.uvigo.esei.dagss.dominio.entidades.Receta;
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.Query;
@@ -21,4 +23,6 @@ public class FarmaciaDAO extends GenericoDAO<Farmacia> {
     }
 
     // Completar aqui
+    
+    
 }

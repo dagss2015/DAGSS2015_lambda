@@ -37,4 +37,10 @@ public class MedicamentoDAO extends GenericoDAO<Medicamento> {
         return q.getResultList();
     }
 
+    public Medicamento buscarMedicamentoPorReceta(Long idReceta){
+        Query q = em.createQuery("SELECT m FROM Medicamento AS m,Prescripcion AS p,Receta AS r "
+                + "  WHERE m.id = p.medicamento.id AND p.id = r.prescripcion.id AND r.id = :idreceta");
+        q.setParameter("idreceta", idReceta);
+        return filtrarResultadoUnico(q);
+    }
 }
