@@ -17,7 +17,7 @@ public class RecetaDAO extends GenericoDAO<Receta>{
     // Completar aqui
     public List<Receta> buscarPorPrescripcion(Long idPrescripcion){
         Query q = em.createQuery("SELECT r FROM Receta AS r "
-                + "  WHERE r.prescripcion.id = :idprescripcion AND CURRENT_TIMESTAMP > r.inicioValidez AND CURRENT_TIMESTAMP < r.finValidez");
+                + "  WHERE r.prescripcion.id = :idprescripcion AND (CURRENT_TIMESTAMP <= r.inicioValidez OR CURRENT_TIMESTAMP <= r.finValidez) ORDER BY r.inicioValidez");
         q.setParameter("idprescripcion", idPrescripcion);
         return q.getResultList();
     }

@@ -23,7 +23,9 @@ import es.uvigo.esei.dagss.dominio.entidades.Tratamiento;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -169,6 +171,9 @@ public class FarmaciaControlador implements Serializable {
     
     public void buscarClienteDNI(){
         pacienteActual = pacienteDAO.buscarPorDNI(textoBuscar);
+        buscarTratamientos();
+        buscarPrescripciones();
+        buscarRecetas();
     }
     
     public void buscarTratamientos(){
@@ -177,13 +182,13 @@ public class FarmaciaControlador implements Serializable {
     
     public void buscarPrescripciones(){
         for(Tratamiento t: listaTratamientos){
-            listaPrescripciones.addAll(prescripcionDAO.buscarPorTratamiento(t.getId()));
+            listaPrescripciones = new LinkedList<>(prescripcionDAO.buscarPorTratamiento(t.getId()));
         }
     }
     
     public void buscarRecetas(){
         for(Prescripcion p: listaPrescripciones){
-            listaRecetas.addAll(recetaDAO.buscarPorPrescripcion(p.getId()));
+            listaRecetas = new LinkedList<>(recetaDAO.buscarPorPrescripcion(p.getId()));
         }
     }
     
@@ -198,17 +203,19 @@ public class FarmaciaControlador implements Serializable {
     }
     
     public boolean servirMedicamento(Receta receta){
-        if(receta.getEstado().equals(EstadoReceta.GENERADA) && 
-            (receta.getInicioValidez().before(Calendar.getInstance().getTime()) ||
-             receta.getInicioValidez().equals(Calendar.getInstance().getTime())) && 
-            (receta.getFinValidez().after(Calendar.getInstance().getTime()) ||
-             receta.getFinValidez().equals(Calendar.getInstance().getTime()))) 
-                return true;
+        if(receta==null) return false;
+            if(receta.getEstado().equals(EstadoReceta.GENERADA) && 
+                (receta.getInicioValidez().before(Calendar.getInstance().getTime()) ||
+                 receta.getInicioValidez().equals(Calendar.getInstance().getTime())) && 
+                (receta.getFinValidez().after(Calendar.getInstance().getTime()) ||
+                 receta.getFinValidez().equals(Calendar.getInstance().getTime()))) 
+                    return true;
         return false;
     }
     
     public void suministrarReceta(Receta receta){
         receta.setEstado(EstadoReceta.SERVIDA);
+        receta.setFarmacia(farmaciaActual);
         recetaDAO.actualizar(receta);
     }
 }

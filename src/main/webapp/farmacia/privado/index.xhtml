@@ -19,6 +19,7 @@
             </ui:define>
 
             <ui:define name="contenido">
+                <h:form>
                 <h:outputLabel value="DNI" />
                 <h:inputText value="#{farmaciaControlador.textoBuscar}"/>
                 <h:commandButton value="Buscar" action="#{farmaciaControlador.buscarClienteDNI()}"/>
@@ -51,14 +52,13 @@
                         <f:facet name="header">
                             <h:outputText value="Válida hasta"/>
                         </f:facet>
-                        <h:inputText value="#{receta.finValidez}"/>
+                        <h:outputText value="#{receta.finValidez}"/>
                     </h:column>
                     <h:column>
-                        <c:if test="#{farmaciaControlador.servirMedicamento(receta)}">
-                              <h:commandButton value="Suministrar" action="#{farmaciaControlador.suministrarReceta(receta)}"/>
-                        </c:if>
+                        <h:commandButton rendered="${farmaciaControlador.servirMedicamento(receta)}" value="Suministrar" action="#{farmaciaControlador.suministrarReceta(receta)}"/>
                     </h:column>
                 </h:dataTable>
+                </h:form>
             </ui:define>
 
         </ui:composition>
